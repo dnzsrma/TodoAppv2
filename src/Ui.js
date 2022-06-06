@@ -50,6 +50,7 @@ function projectAddBtn(){
         let projectTitle = document.getElementById("project-title-input").value;
         let newProject = new project(projectTitle);
         allProjects.push(newProject);
+        localStorage.setItem('allProjects',JSON.stringify(allProjects));
         console.log("All projects array : " + allProjects);
         showSidebarItems();
         addProjectButton();
@@ -77,7 +78,7 @@ function cleanInside(divName){
 }
 function showTasksInProject(project){
     cleanInside("task-container");
-    project.projectPage();
+    projectPage(project);
     let button = document.createElement("button");
     button.id = "new-todo-btn";
     button.onclick = function(){
@@ -114,6 +115,23 @@ function openTaskPopup(project){
     
     taskAddBtn(project);
 }
+function projectPage(project){
+    if(project.arrayOfTodos.length > 0){
+        for(let i = 0; i < project.arrayOfTodos.length ; i++){
+            let newTodoItem = document.createElement("div");
+            newTodoItem.innerHTML = `
+            <p> Title: ${project.arrayOfTodos[i].title}</p>
+            <p> Description : ${project.arrayOfTodos[i].description}</p>
+            <p> Due Date: ${project.arrayOfTodos[i].dueDate}</p>
+            <p> Priority: ${project.arrayOfTodos[i].priority}</p>
+            `   ;
+            newTodoItem.classList.add("task-card");
+            document.getElementById("task-container").appendChild(newTodoItem);
+        }
+    }
+
+}
+
 function taskAddBtn(project){
         document.getElementById("task-add-btn").onclick = function(){
         let projectTitle = document.getElementById("todo-title-input").value;
@@ -122,6 +140,7 @@ function taskAddBtn(project){
         let projectPrio = document.getElementById("todo-priority-input").value;
         let newTask = new todoItem(projectTitle,projectDesc,projectDue,projectPrio);
         project.arrayOfTodos.push(newTask);
+        localStorage.setItem('allProjects',JSON.stringify(allProjects));
         showTasksInProject(project);
         console.log(project.arrayOfTodos);
     }
